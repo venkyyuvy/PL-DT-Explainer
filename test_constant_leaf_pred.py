@@ -7,11 +7,11 @@ from constant_leaf_pred import Shap
 
 class TestShap():
     def setup(self):
-        self.rng = np.random.RandomState(3)
-        X, y = make_regression(n_samples=1000, n_features=3,
-                n_informative=3, random_state=self.rng)
+        self.rng = np.random.RandomState(9)
+        X, y = make_regression(n_samples=1000, n_features=6,
+                n_informative=6, random_state=self.rng)
         tree = DecisionTreeRegressor(   
-            max_depth=2, random_state=self.rng).fit(X, y)
+            max_depth=4, random_state=self.rng).fit(X, y)
         self.shap = Shap().fit(tree)
 
 
@@ -31,4 +31,7 @@ class TestShap():
         assert total_contrib == \
             self.shap.tree.predict(test_x)[0]
 
-        
+    def test_dp(self,):
+        test_x = self.rng.rand(1,6)
+        self.shap.explain(test_x)
+        assert False

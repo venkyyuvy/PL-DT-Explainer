@@ -1,0 +1,94 @@
+\documentclass{article}
+
+\usepackage{amsmath,amsthm,amsfonts}                % AMS Math
+
+\title{Machine learning models explainbility using Shapley theory}
+\author{Venkatachalam Natchiappan}
+\date{Jun 2022}
+
+\begin{document}
+
+\maketitle
+
+\section{Shapley Theory}
+Shapley value estimation
+
+Effect of including a features when model is working with a subset of features ($S$) from the original set of features $F \backslash \{i\}$.
+
+\begin{align}
+    S &\subseteq F \setminus \{i\} \\
+    \phi_i &=  \sum_{S \subseteq F \setminus \{i\}} \frac{|S|! (|F| - |S| - 1)!}  {|F|!} [ f_{s\cup \{i\}}(x_{s\cup \{i\}}) - f_s(x_s)  ]
+\end{align}
+
+
+The original model $f$ require all the input features to produce an output. Hence, a base value or background value needs to be provided by the user for the missing features ( $F \setminus S$)
+
+
+\textit{Properties of shapley value functions}
+\begin{enumerate}
+        \item Local accuracy:
+            \begin{align}
+                f(x) = g(x'), where h(x') = x
+            \end{align}
+
+        \item Missingness:
+
+            If $ x'_i = 0 \Rightarrow \phi_i = 0 $
+
+        \item consistency:
+            \begin{align}
+            f'_x (z') - f'_x(z'\setminus i) \geq f_x(z') - f_x(z' \setminus i)
+            \end{align}
+
+\end{enumerate}
+\section{Local explainability}
+
+Let the initial ML model needs to be explained as $f$.
+
+Explanation model ($g$): An interpretable approximate model ($g$) over original model ($f$). 
+
+A simplified input representation $x'$ is mapped to original input $x$, using a mapping function $h$. 1 indicates that the feature is included in the model and 0 indiccaets the exclusion from the model.
+
+$h_x$ maps 1 in simplied input into original input and zero otherwise.
+\begin{equation}
+h_x (x') = x 
+\end{equation}
+
+\begin{align}
+        g(z') &\approx f(h_x(z')), \mspace{20mu} \text{where} \mspace{10mu}z' \approx x'\\
+        g(z') &= \phi_0 + \sum_{i=1}^M \phi_i z'_i\\
+        z' &\in \{0, 1\}^M \\
+        \phi_i &\in \textbf{R}
+\end{align}
+
+
+\section{Shapley sampling values}
+
+\begin{enumerate}
+        \item Sampling approximation to $\phi_i$
+        \item Approximate the effect of removing a variable by over-sampling from the training dataset.
+\end{enumerate}
+
+
+
+\section{Shap values for piecewise linear decision trees}
+
+$F$ is a set of all the features used in the nodes along the path to the leaf $j$. 
+
+$S$ is a subset of $N$ (which is the super set of all the features, $M$). 
+
+
+\section{Questions}
+
+\begin{enumerate}
+        \item what would be the rows and the columns for a D*D matrix
+        \item Whether F has a unique set of features or not? O (D) is mentioned as the complexity because it is the worst case complexity for number of unique features in a path with size D.
+        \item Condition defined for k==0 and T==0, is appicable even when T==0 itself?
+        \item with zero indexing as Python does, the max value of K is |F|-1?
+        \item The sum of feature contribution of all features equal to prediction of the original function?
+        \item How would the feature contribution for all the features can be computed in O (D) from the D*D table. 
+        \item If a feature is not present in the path, then it's contribution is equal to zero?
+        \item The feature contribution would be computed based only one path that the data point reaches?
+\end{enumerate}
+
+\end{document}
